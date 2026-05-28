@@ -1,0 +1,55 @@
+:root {
+  color-scheme: light;
+
+  /* Brand — sampled from the EvoTech Innovations logo */
+  --brand-blue: #134e7c;
+  --brand-blue-deep: #0e3c61;
+  --brand-green: #17a06a;
+  --brand-green-deep: #0f7e52;
+
+  /* Apple-style neutral canvas */
+  --bg: #ffffff;
+  --bg-soft: #f5f5f7;
+  --bg-tint: #f4f8fb;
+  --ink: #1d1d1f;
+  --ink-2: #5b5d62;
+  --ink-3: #86868b;
+  --line: rgba(0, 0, 0, 0.08);
+  --line-strong: rgba(0, 0, 0, 0.14);
+
+  /* Backwards-compatible aliases */
+  --color-primary: var(--brand-blue);
+  --color-accent: var(--brand-green);
+  --color-dark: var(--ink);
+  --color-muted: var(--bg-soft);
+  --color-surface: var(--bg);
+  --color-text: var(--ink);
+  --color-text-muted: var(--ink-2);
+
+  --radius-sm: 0.5rem;
+  --radius-md: 0.875rem;
+  --radius-lg: 1.25rem;
+  --radius-xl: 1.5rem;
+  --radius-2xl: 2rem;
+  --radius-3xl: 2.5rem;
+  --radius-pill: 999px;
+
+  --shadow-soft: 0 2px 10px rgba(0, 0, 0, 0.04);
+  --shadow-card: 0 10px 40px -12px rgba(16, 24, 40, 0.16);
+  --shadow-lift: 0 24px 60px -20px rgba(16, 24, 40, 0.28);
+  --shadow-focus: 0 0 0 4px rgba(19, 78, 124, 0.28);
+
+  --gradient-brand: linear-gradient(120deg, var(--brand-blue) 0%, var(--brand-green) 100%);
+
+  --font-display: -apple-system, BlinkMacSystemFont, 'SF Pro Display', 'Inter Tight', 'Inter',
+    system-ui, sans-serif;
+  --font-body: -apple-system, BlinkMacSystemFont, 'SF Pro Text', 'Inter', system-ui, sans-serif;
+
+  --header-h: 52px;
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  :root {
+    scroll-behavior: smooth;
+  }
+}

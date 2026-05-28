@@ -1,0 +1,20 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="630">
+  <defs>
+    <linearGradient id="grad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#0E6B78" />
+      <stop offset="100%" stop-color="#1FAFA0" />
+    </linearGradient>
+  </defs>
+  <rect width="1200" height="630" fill="url(#grad)" rx="32" />
+  <circle cx="130" cy="120" r="60" fill="rgba(255,255,255,0.12)" />
+  <text x="120" y="260" font-size="70" font-family="Inter Tight, Inter, sans-serif" fill="#ffffff" font-weight="600">
+    Evotech Innovations
+  </text>
+  <text x="120" y="340" font-size="38" font-family="Inter, system-ui, sans-serif" fill="#eef7f7">
+    Minimal web development that converts.
+  </text>
+  <text x="120" y="420" font-size="28" font-family="Inter, system-ui, sans-serif" fill="#d8fffa">
+    React · Tailwind · Framer Motion
+  </text>
+</svg>
+

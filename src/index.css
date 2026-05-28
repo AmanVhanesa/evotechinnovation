@@ -1,0 +1,124 @@
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Inter+Tight:wght@500;600;700&display=swap');
+@import './styles/vars.css';
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
+html {
+  font-size: 16px;
+  -webkit-text-size-adjust: 100%;
+}
+
+body {
+  margin: 0;
+  font-family: var(--font-body);
+  color: var(--ink);
+  background: var(--bg);
+  min-height: 100vh;
+  text-rendering: optimizeLegibility;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+#root {
+  min-height: 100vh;
+}
+
+::selection {
+  background: rgba(19, 78, 124, 0.16);
+}
+
+:focus-visible {
+  outline: none;
+  box-shadow: var(--shadow-focus);
+  border-radius: var(--radius-sm);
+}
+
+@layer base {
+  h1,
+  h2,
+  h3,
+  h4 {
+    font-family: var(--font-display);
+    letter-spacing: -0.022em;
+    font-weight: 600;
+    color: var(--ink);
+  }
+}
+
+@layer components {
+  .container-x {
+    @apply mx-auto w-full max-w-content px-5 sm:px-6 lg:px-10;
+  }
+
+  /* Apple-style hero / section display type */
+  .display-1 {
+    font-family: var(--font-display);
+    font-weight: 600;
+    letter-spacing: -0.03em;
+    line-height: 1.04;
+    font-size: clamp(2.6rem, 6.5vw, 5rem);
+  }
+
+  .display-2 {
+    font-family: var(--font-display);
+    font-weight: 600;
+    letter-spacing: -0.028em;
+    line-height: 1.06;
+    font-size: clamp(2rem, 4.6vw, 3.4rem);
+  }
+
+  .text-balance {
+    text-wrap: balance;
+  }
+
+  .gradient-text {
+    background: var(--gradient-brand);
+    -webkit-background-clip: text;
+    background-clip: text;
+    color: transparent;
+  }
+
+  .card-surface {
+    background: var(--bg);
+    border: 1px solid var(--line);
+    border-radius: var(--radius-3xl);
+    box-shadow: var(--shadow-card);
+  }
+
+  .pill {
+    @apply inline-flex items-center gap-2 rounded-pill border border-line bg-white px-3.5 py-1.5 text-[0.8rem] font-medium text-ink2;
+  }
+
+  .skip-link {
+    position: absolute;
+    top: -4rem;
+    left: 1rem;
+    padding: 0.7rem 1.25rem;
+    background: var(--ink);
+    color: white;
+    border-radius: var(--radius-pill);
+    font-weight: 600;
+    transition: top 0.2s ease;
+    z-index: 80;
+  }
+
+  .skip-link:focus {
+    top: 1rem;
+  }
+}
+
+.hide-scrollbar::-webkit-scrollbar {
+  display: none;
+}
+.hide-scrollbar {
+  -ms-overflow-style: none;
+  scrollbar-width: none;
+}
