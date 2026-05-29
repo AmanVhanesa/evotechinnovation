@@ -1,3 +1,4 @@
+import LiveEmbed from './LiveEmbed';
 import type { Project } from '@/types/project';
 
 interface ProjectCoverProps {
@@ -82,6 +83,19 @@ const PhoneMock = ({ project }: { project: Project }) => (
 );
 
 const ProjectCover = ({ project, className = '', compact }: ProjectCoverProps) => {
+  if (project.liveEmbed && project.liveUrl) {
+    return (
+      <LiveEmbed
+        url={project.liveUrl}
+        title={`${project.title} live preview`}
+        // Zoom in on cards so the site's hero fills the smaller frame; keep the
+        // full desktop width on the large detail-page hero.
+        viewportWidth={compact ? 1024 : 1280}
+        className={className}
+      />
+    );
+  }
+
   if (project.image) {
     return (
       <img

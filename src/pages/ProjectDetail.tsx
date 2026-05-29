@@ -142,6 +142,32 @@ const ProjectDetail = () => {
         </div>
       </section>
 
+      {project.gallery?.length ? (
+        <section className="container-x pb-20">
+          <h2 className="font-display text-2xl font-semibold tracking-tighter text-ink">Gallery</h2>
+          <div className="mt-6 grid gap-6 sm:grid-cols-2">
+            {project.gallery.map((shot) => (
+              <motion.figure
+                key={shot.src}
+                variants={scaleReveal}
+                initial="hidden"
+                whileInView="visible"
+                viewport={{ once: true, amount: 0.2 }}
+                className="overflow-hidden rounded-2xl border border-line shadow-card"
+              >
+                <img
+                  src={shot.src}
+                  alt={shot.alt}
+                  loading="lazy"
+                  decoding="async"
+                  className="h-full w-full object-cover"
+                />
+              </motion.figure>
+            ))}
+          </div>
+        </section>
+      ) : null}
+
       {/* Next + CTA */}
       <section className="bg-soft py-20">
         <div className="container-x flex flex-col items-center gap-10 text-center">
