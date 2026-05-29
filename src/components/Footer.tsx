@@ -24,7 +24,7 @@ const Footer = () => (
       <div className="grid gap-12 md:grid-cols-[1.4fr,1fr,1fr]">
         <div>
           <Link to="/" className="flex items-center gap-2.5">
-            <img src="/logo.png" alt="EvoTech Innovations" className="h-8 w-auto object-contain" />
+            <img src="/logo.png" alt="EvoTech Innovations" className="h-14 w-auto object-contain" />
             <span className="font-display text-lg font-semibold tracking-tighter text-ink">
               EvoTech Innovations
             </span>
@@ -34,10 +34,10 @@ const Footer = () => (
             day — fast, polished and made to last.
           </p>
           <a
-            href="mailto:hello@evotechinnovations.com"
+            href="mailto:evotechnologiesinnovation@gmail.com"
             className="mt-5 inline-block font-display text-lg font-semibold tracking-tighter text-brand-blue hover:text-brand-bluedeep"
           >
-            hello@evotechinnovations.com
+            evotechnologiesinnovation@gmail.com
           </a>
         </div>
 
