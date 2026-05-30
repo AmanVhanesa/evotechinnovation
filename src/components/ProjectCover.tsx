@@ -97,14 +97,18 @@ const ProjectCover = ({ project, className = '', compact }: ProjectCoverProps) =
   }
 
   if (project.image) {
+    // Screenshots (own aspect ratio) are shown complete via object-contain so
+    // they're never cropped by the frame; the soft backdrop fills any gaps.
     return (
-      <img
-        src={project.image}
-        alt={project.title}
-        loading="lazy"
-        decoding="async"
-        className={`h-full w-full object-cover ${className}`}
-      />
+      <div className={`flex h-full w-full items-center justify-center bg-soft ${className}`}>
+        <img
+          src={project.image}
+          alt={project.title}
+          loading="lazy"
+          decoding="async"
+          className="h-full w-full object-contain"
+        />
+      </div>
     );
   }
 
