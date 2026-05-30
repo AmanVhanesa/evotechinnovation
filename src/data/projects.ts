@@ -24,6 +24,7 @@ export const projects: Project[] = [
     ],
     liveUrl: 'https://learnovoportal.com',
     liveLabel: 'learnovoportal.com',
+    liveEmbed: true,
     image: '/projects/learnovo-devices.png',
     gallery: [
       { src: '/projects/learnovo-dark.png', alt: 'Learnovo landing page in dark mode' },
