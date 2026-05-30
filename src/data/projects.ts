@@ -84,6 +84,7 @@ export const projects: Project[] = [
     ],
     liveUrl: 'https://newmedixpharma.com',
     liveLabel: 'newmedixpharma.com',
+    image: '/projects/newmedix-pharma.jpg',
     cover: { from: '#0e5a73', to: '#17a06a' },
     featured: true,
   },
