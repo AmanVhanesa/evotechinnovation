@@ -26,6 +26,7 @@ export const projects: Project[] = [
     liveLabel: 'learnovoportal.com',
     image: '/projects/learnovo-devices.png',
     gallery: [
+      { src: '/projects/learnovo-dashboard.png', alt: 'Learnovo admin dashboard showing fee collection, attendance and enrollment analytics' },
       { src: '/projects/learnovo-dark.png', alt: 'Learnovo landing page in dark mode' },
       { src: '/projects/learnovo-light.png', alt: 'Learnovo landing page in light mode' },
     ],
