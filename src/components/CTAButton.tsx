@@ -15,12 +15,14 @@ interface CTAButtonProps {
 }
 
 const base =
-  'inline-flex items-center justify-center gap-2 rounded-pill px-6 py-3 text-[0.95rem] font-semibold transition duration-300 ease-apple focus-visible:outline-none';
+  'group inline-flex items-center justify-center gap-2 rounded-pill px-6 py-3 text-[0.95rem] font-semibold transition duration-300 ease-apple focus-visible:outline-none';
 
 const variants: Record<Variant, string> = {
-  primary: 'bg-brand-blue text-white hover:bg-brand-bluedeep shadow-soft hover:-translate-y-0.5',
-  secondary: 'bg-soft text-ink hover:bg-black/[0.06]',
-  ghost: 'text-brand-blue hover:text-brand-bluedeep px-2',
+  primary:
+    'bg-gradient-brand text-white shadow-soft hover:shadow-glow hover:-translate-y-0.5',
+  secondary:
+    'glass text-ink hover:border-linestrong hover:bg-white hover:-translate-y-0.5',
+  ghost: 'px-2 text-ink2 hover:text-ink',
 };
 
 const CTAButton = ({

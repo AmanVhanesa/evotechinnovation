@@ -1,224 +1,252 @@
-import { motion, type Variants } from 'framer-motion';
-import { ArrowRight, Sparkles } from 'lucide-react';
-import { useEffect, useRef } from 'react';
-import { Link } from 'react-router-dom';
+import { useRef } from 'react';
+import { motion, useScroll, useTransform } from 'framer-motion';
+import Aurora from './Aurora';
+import BrowserFrame from './BrowserFrame';
+import CTAButton from './CTAButton';
+import Magnetic from './Magnetic';
+import usePrefersReducedMotion from '@/hooks/usePrefersReducedMotion';
+import { ease } from '@/styles/motionVariants';
 
-type Point = { x: number; y: number };
+const headlineLines = [
+  { words: ['We', 'design', '&', 'build'], gradient: false },
+  { words: ['digital', 'experiences'], gradient: true },
+  { words: ['clients', 'fall', 'for.'], gradient: false },
+];
 
-interface WaveConfig {
-  offset: number;
-  amplitude: number;
-  frequency: number;
-  color: string;
-  opacity: number;
-}
-
-const highlightPills = ['Websites', 'Platforms & ERP', 'Mobile apps'] as const;
-
-const containerVariants: Variants = {
-  hidden: { opacity: 0, y: 24 },
-  visible: { opacity: 1, y: 0, transition: { duration: 0.8, staggerChildren: 0.12 } },
+const lineContainer = {
+  hidden: {},
+  visible: { transition: { staggerChildren: 0.07, delayChildren: 0.15 } },
 };
 
-const itemVariants: Variants = {
-  hidden: { opacity: 0, y: 24 },
-  visible: { opacity: 1, y: 0, transition: { duration: 0.6, ease: 'easeOut' } },
+const wordReveal = {
+  hidden: { y: '115%', rotate: 2.5 },
+  visible: { y: '0%', rotate: 0, transition: { duration: 0.85, ease } },
 };
+
+/** Slowly rotating orbit rings behind the hero showcase. */
+const OrbitRings = () => (
+  <div
+    aria-hidden="true"
+    className="pointer-events-none absolute left-1/2 top-[58%] -z-10 -translate-x-1/2 -translate-y-1/2"
+  >
+    <svg width="760" height="760" viewBox="0 0 760 760" fill="none" className="animate-spin-slow">
+      <circle cx="380" cy="380" r="280" stroke="rgba(13,30,50,0.10)" strokeDasharray="3 10" />
+      <circle cx="380" cy="100" r="4" fill="#0e7ea3" opacity="0.7" />
+      <circle cx="660" cy="380" r="3" fill="#17a06a" opacity="0.6" />
+    </svg>
+    <svg
+      width="560"
+      height="560"
+      viewBox="0 0 560 560"
+      fill="none"
+      className="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 animate-spin-slower"
+    >
+      <circle cx="280" cy="280" r="220" stroke="rgba(13,30,50,0.12)" strokeDasharray="2 8" />
+      <circle cx="280" cy="60" r="3.5" fill="#134e7c" opacity="0.7" />
+    </svg>
+  </div>
+);
+
+/** Tiny gradient sparkline used in a floating stat chip. */
+const Sparkline = () => (
+  <svg width="72" height="26" viewBox="0 0 72 26" fill="none" aria-hidden="true">
+    <defs>
+      <linearGradient id="sparkline-grad" x1="0" y1="0" x2="72" y2="0" gradientUnits="userSpaceOnUse">
+        <stop stopColor="#17a06a" />
+        <stop offset="1" stopColor="#134e7c" />
+      </linearGradient>
+    </defs>
+    <motion.path
+      d="M2 20 L12 16 L22 18 L32 10 L42 13 L52 6 L62 9 L70 3"
+      stroke="url(#sparkline-grad)"
+      strokeWidth="2"
+      strokeLinecap="round"
+      initial={{ pathLength: 0 }}
+      animate={{ pathLength: 1 }}
+      transition={{ duration: 1.6, delay: 1.1, ease: 'easeOut' }}
+    />
+  </svg>
+);
 
 const Hero = () => {
-  const canvasRef = useRef<HTMLCanvasElement | null>(null);
-  const mouseRef = useRef<Point>({ x: 0, y: 0 });
-  const targetMouseRef = useRef<Point>({ x: 0, y: 0 });
+  const sectionRef = useRef<HTMLElement>(null);
+  const prefersReducedMotion = usePrefersReducedMotion();
+  const { scrollYProgress } = useScroll({
+    target: sectionRef,
+    offset: ['start start', 'end start'],
+  });
 
-  useEffect(() => {
-    const canvas = canvasRef.current;
-    if (!canvas) return undefined;
-    const ctx = canvas.getContext('2d');
-    if (!ctx) return undefined;
-
-    let animationId: number;
-    let time = 0;
-
-    const css = (name: string, fallback: string) => {
-      const value = getComputedStyle(document.documentElement).getPropertyValue(name).trim();
-      return value || fallback;
-    };
-
-    const hexToRgba = (hex: string, alpha: number) => {
-      const h = hex.replace('#', '');
-      const full = h.length === 3 ? h.split('').map((c) => c + c).join('') : h;
-      const r = parseInt(full.slice(0, 2), 16);
-      const g = parseInt(full.slice(2, 4), 16);
-      const b = parseInt(full.slice(4, 6), 16);
-      return `rgba(${r}, ${g}, ${b}, ${alpha})`;
-    };
-
-    const blue = css('--brand-blue', '#134e7c');
-    const green = css('--brand-green', '#17a06a');
-    const bgTop = css('--bg', '#ffffff');
-    const bgBottom = css('--bg-soft', '#f5f5f7');
-
-    const wavePalette: WaveConfig[] = [
-      { offset: 0, amplitude: 72, frequency: 0.003, color: hexToRgba(blue, 0.9), opacity: 0.4 },
-      { offset: Math.PI / 2, amplitude: 92, frequency: 0.0026, color: hexToRgba(green, 0.85), opacity: 0.34 },
-      { offset: Math.PI, amplitude: 60, frequency: 0.0034, color: hexToRgba(blue, 0.7), opacity: 0.26 },
-      { offset: Math.PI * 1.5, amplitude: 82, frequency: 0.0022, color: hexToRgba(green, 0.6), opacity: 0.22 },
-      { offset: Math.PI * 2, amplitude: 54, frequency: 0.004, color: hexToRgba(blue, 0.5), opacity: 0.16 },
-    ];
-
-    const prefersReducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
-    const mouseInfluence = prefersReducedMotion ? 8 : 64;
-    const influenceRadius = prefersReducedMotion ? 160 : 320;
-    const smoothing = prefersReducedMotion ? 0.04 : 0.1;
-
-    const resizeCanvas = () => {
-      canvas.width = canvas.offsetWidth;
-      canvas.height = canvas.offsetHeight;
-    };
-    const recenterMouse = () => {
-      const center = { x: canvas.width / 2, y: canvas.height / 2 };
-      mouseRef.current = center;
-      targetMouseRef.current = center;
-    };
-    const handleResize = () => {
-      resizeCanvas();
-      recenterMouse();
-    };
-    const handleMouseMove = (event: MouseEvent) => {
-      const rect = canvas.getBoundingClientRect();
-      targetMouseRef.current = { x: event.clientX - rect.left, y: event.clientY - rect.top };
-    };
-    const handleMouseLeave = () => recenterMouse();
-
-    resizeCanvas();
-    recenterMouse();
-    window.addEventListener('resize', handleResize);
-    window.addEventListener('mousemove', handleMouseMove);
-    window.addEventListener('mouseleave', handleMouseLeave);
-
-    const drawWave = (wave: WaveConfig) => {
-      ctx.save();
-      ctx.beginPath();
-      for (let x = 0; x <= canvas.width; x += 4) {
-        const dx = x - mouseRef.current.x;
-        const dy = canvas.height / 2 - mouseRef.current.y;
-        const distance = Math.sqrt(dx * dx + dy * dy);
-        const influence = Math.max(0, 1 - distance / influenceRadius);
-        const mouseEffect = influence * mouseInfluence * Math.sin(time * 0.001 + x * 0.01 + wave.offset);
-        const y =
-          canvas.height / 2 +
-          Math.sin(x * wave.frequency + time * 0.002 + wave.offset) * wave.amplitude +
-          Math.sin(x * wave.frequency * 0.4 + time * 0.003) * (wave.amplitude * 0.45) +
-          mouseEffect;
-        if (x === 0) ctx.moveTo(x, y);
-        else ctx.lineTo(x, y);
-      }
-      ctx.lineWidth = 2.5;
-      ctx.strokeStyle = wave.color;
-      ctx.globalAlpha = wave.opacity;
-      ctx.shadowBlur = 32;
-      ctx.shadowColor = wave.color;
-      ctx.stroke();
-      ctx.restore();
-    };
-
-    const animate = () => {
-      time += 1;
-      mouseRef.current.x += (targetMouseRef.current.x - mouseRef.current.x) * smoothing;
-      mouseRef.current.y += (targetMouseRef.current.y - mouseRef.current.y) * smoothing;
-
-      const gradient = ctx.createLinearGradient(0, 0, 0, canvas.height);
-      gradient.addColorStop(0, bgTop);
-      gradient.addColorStop(1, bgBottom);
-      ctx.fillStyle = gradient;
-      ctx.fillRect(0, 0, canvas.width, canvas.height);
-
-      ctx.globalAlpha = 1;
-      ctx.shadowBlur = 0;
-      wavePalette.forEach(drawWave);
-
-      animationId = window.requestAnimationFrame(animate);
-    };
-
-    animationId = window.requestAnimationFrame(animate);
-
-    return () => {
-      window.removeEventListener('resize', handleResize);
-      window.removeEventListener('mousemove', handleMouseMove);
-      window.removeEventListener('mouseleave', handleMouseLeave);
-      cancelAnimationFrame(animationId);
-    };
-  }, []);
+  // Parallax: the showcase sinks slower than the page, floating chips drift faster.
+  const showcaseY = useTransform(scrollYProgress, [0, 1], [0, prefersReducedMotion ? 0 : 90]);
+  const chipLeftY = useTransform(scrollYProgress, [0, 1], [0, prefersReducedMotion ? 0 : -70]);
+  const chipRightY = useTransform(scrollYProgress, [0, 1], [0, prefersReducedMotion ? 0 : -130]);
+  const fade = useTransform(scrollYProgress, [0, 0.7], [1, 0]);
 
   return (
-    <section
-      className="relative isolate flex min-h-[calc(100vh-52px)] w-full items-center justify-center overflow-hidden bg-bg"
-      aria-label="Hero"
-    >
-      <canvas ref={canvasRef} className="absolute inset-0 h-full w-full" aria-hidden="true" />
-      <div className="pointer-events-none absolute inset-0 -z-10">
-        <div className="absolute left-1/2 top-0 h-[520px] w-[520px] -translate-x-1/2 rounded-full bg-brand-blue/[0.05] blur-[140px]" />
-        <div className="absolute bottom-0 right-0 h-[360px] w-[360px] rounded-full bg-brand-green/[0.06] blur-[120px]" />
-      </div>
+    <section ref={sectionRef} className="relative overflow-hidden pb-10 pt-[136px] sm:pt-[170px]">
+      <Aurora variant="hero" />
 
-      <div className="relative z-10 mx-auto flex w-full max-w-content flex-col items-center px-5 py-24 text-center sm:px-6 lg:px-10">
-        <motion.div variants={containerVariants} initial="hidden" animate="visible" className="w-full">
-          <motion.div
-            variants={itemVariants}
-            className="mb-7 inline-flex items-center gap-2 rounded-pill border border-line bg-white/70 px-4 py-2 text-xs font-semibold uppercase tracking-[0.18em] text-ink2 backdrop-blur"
-          >
-            <Sparkles className="h-4 w-4 text-brand-green" aria-hidden="true" />
-            EvoTech Innovations · Digital product studio
-          </motion.div>
+      <motion.div style={{ opacity: fade }} className="container-x relative text-center">
+        {/* Availability pill */}
+        <motion.p
+          className="eyebrow"
+          initial={{ opacity: 0, y: 16 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.7, ease }}
+        >
+          <span className="relative flex h-2 w-2">
+            <span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-brand-teal opacity-60" />
+            <span className="relative inline-flex h-2 w-2 rounded-full bg-brand-teal" />
+          </span>
+          Digital product studio · Accepting new projects
+        </motion.p>
 
-          <motion.h1 variants={itemVariants} className="display-1 mx-auto max-w-4xl text-balance">
-            We build digital products businesses <span className="gradient-text">run on.</span>
-          </motion.h1>
+        {/* Word-staggered headline */}
+        <motion.h1
+          className="display-1 mx-auto mt-7 max-w-4xl"
+          variants={lineContainer}
+          initial="hidden"
+          animate="visible"
+        >
+          {headlineLines.map((line) => (
+            <span key={line.words.join(' ')} className="block">
+              {line.words.map((word, wordIndex) => (
+                <span key={`${word}-${wordIndex}`} className="inline-block overflow-hidden pb-[0.12em] -mb-[0.12em] align-bottom">
+                  <motion.span
+                    variants={wordReveal}
+                    className={`inline-block will-change-transform ${line.gradient ? 'gradient-text' : ''}`}
+                  >
+                    {word}
+                    {wordIndex < line.words.length - 1 ? ' ' : ''}
+                  </motion.span>
+                </span>
+              ))}
+            </span>
+          ))}
+        </motion.h1>
 
-          <motion.p
-            variants={itemVariants}
-            className="mx-auto mt-6 max-w-2xl text-lg leading-relaxed text-ink2 sm:text-xl"
-          >
-            From school platforms to pharma websites and mobile apps, we design and ship fast,
-            beautiful software people actually trust.
-          </motion.p>
+        <motion.p
+          className="mx-auto mt-7 max-w-xl text-lg leading-relaxed text-ink2 sm:text-xl"
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.8, delay: 0.55, ease }}
+        >
+          EvoTech Innovations crafts fast, beautiful websites, cloud platforms and mobile apps —
+          from first sketch to launch day and beyond.
+        </motion.p>
 
-          <motion.div
-            variants={itemVariants}
-            className="mt-9 flex flex-col items-center justify-center gap-3 sm:flex-row"
-          >
-            <Link
-              to="/work"
-              className="group inline-flex items-center justify-center gap-2 rounded-pill bg-brand-blue px-7 py-3.5 font-semibold text-white shadow-soft transition duration-300 ease-apple hover:-translate-y-0.5 hover:bg-brand-bluedeep"
-            >
-              View our work
-              <ArrowRight className="h-4 w-4 transition-transform group-hover:translate-x-1" aria-hidden="true" />
-            </Link>
-            <Link
-              to="/contact"
-              className="inline-flex items-center justify-center rounded-pill border border-line bg-white/70 px-7 py-3.5 font-semibold text-ink backdrop-blur transition duration-300 ease-apple hover:bg-white"
-            >
+        <motion.div
+          className="mt-9 flex flex-wrap items-center justify-center gap-3"
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.8, delay: 0.7, ease }}
+        >
+          <Magnetic>
+            <CTAButton to="/contact">
               Start a project
-            </Link>
+              <svg width="15" height="15" viewBox="0 0 24 24" fill="none" aria-hidden="true" className="transition-transform duration-300 group-hover:translate-x-1">
+                <path d="M5 12h14m-6-6 6 6-6 6" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round" />
+              </svg>
+            </CTAButton>
+          </Magnetic>
+          <Magnetic>
+            <CTAButton to="/work" variant="secondary">
+              Explore our work
+            </CTAButton>
+          </Magnetic>
+        </motion.div>
+      </motion.div>
+
+      {/* Showcase — Learnovo dashboard in a glass browser, floating stat chips */}
+      <div className="container-x relative mt-16 sm:mt-20">
+        <OrbitRings />
+
+        <motion.div
+          initial={{ opacity: 0, y: 60, scale: 0.96 }}
+          animate={{ opacity: 1, y: 0, scale: 1 }}
+          transition={{ duration: 1.1, delay: 0.5, ease }}
+          style={{ y: showcaseY }}
+          className="relative mx-auto max-w-4xl"
+        >
+          {/* Glow under the frame */}
+          <div
+            aria-hidden="true"
+            className="absolute -inset-6 -z-10 rounded-[3rem] bg-gradient-brand opacity-[0.14] blur-3xl"
+          />
+          <BrowserFrame url="learnovoportal.com" bodyClassName="bg-[#eef2f7]">
+            <img
+              src="/projects/learnovo-dashboard.png"
+              alt="Learnovo school management dashboard built by EvoTech"
+              className="w-full"
+              decoding="async"
+              fetchPriority="high"
+            />
+          </BrowserFrame>
+
+          {/* Floating chips */}
+          <motion.div
+            style={{ y: chipLeftY }}
+            className="absolute -left-6 top-[16%] hidden md:block lg:-left-16"
+          >
+            <motion.div
+              className="glass-card rounded-2xl p-4"
+              animate={{ y: [0, -10, 0] }}
+              transition={{ repeat: Infinity, duration: 6, ease: 'easeInOut' }}
+            >
+              <p className="text-[0.68rem] font-semibold uppercase tracking-[0.16em] text-ink3">
+                Student attendance
+              </p>
+              <div className="mt-1.5 flex items-end gap-3">
+                <p className="font-display text-2xl font-semibold text-ink">98%</p>
+                <Sparkline />
+              </div>
+            </motion.div>
           </motion.div>
 
-          <motion.ul
-            variants={itemVariants}
-            className="mt-10 flex flex-wrap items-center justify-center gap-2.5 text-xs font-semibold uppercase tracking-[0.16em] text-ink2"
+          <motion.div
+            style={{ y: chipRightY }}
+            className="absolute -right-6 bottom-[18%] hidden md:block lg:-right-16"
           >
-            {highlightPills.map((pill) => (
-              <li
-                key={pill}
-                className="rounded-pill border border-line bg-white/70 px-4 py-2 backdrop-blur"
-              >
-                {pill}
-              </li>
-            ))}
-          </motion.ul>
+            <motion.div
+              className="glass-card rounded-2xl p-4"
+              animate={{ y: [0, -12, 0] }}
+              transition={{ repeat: Infinity, duration: 7, ease: 'easeInOut', delay: 0.8 }}
+            >
+              <div className="flex items-center gap-3">
+                <span className="flex h-9 w-9 items-center justify-center rounded-xl bg-gradient-brand text-white">
+                  <svg width="16" height="16" viewBox="0 0 24 24" fill="none" aria-hidden="true">
+                    <path d="M20 7 9 18l-5-5" stroke="currentColor" strokeWidth="2.4" strokeLinecap="round" strokeLinejoin="round" />
+                  </svg>
+                </span>
+                <div>
+                  <p className="font-display text-lg font-semibold leading-none text-ink">2,00,000+</p>
+                  <p className="mt-1 text-[0.7rem] text-ink3">students managed on Learnovo</p>
+                </div>
+              </div>
+            </motion.div>
+          </motion.div>
         </motion.div>
       </div>
 
-      <div className="pointer-events-none absolute inset-x-0 bottom-0 h-24 bg-gradient-to-b from-transparent to-bg" />
+      {/* Scroll cue */}
+      <motion.div
+        className="mt-14 hidden justify-center sm:flex"
+        initial={{ opacity: 0 }}
+        animate={{ opacity: 1 }}
+        transition={{ delay: 1.6, duration: 1 }}
+        aria-hidden="true"
+      >
+        <div className="flex flex-col items-center gap-2 text-ink3">
+          <span className="text-[0.65rem] font-semibold uppercase tracking-[0.3em]">Scroll</span>
+          <span className="flex h-9 w-5 items-start justify-center rounded-pill border border-linestrong p-1">
+            <motion.span
+              className="h-1.5 w-1.5 rounded-full bg-gradient-brand"
+              animate={{ y: [0, 14, 0], opacity: [1, 0.2, 1] }}
+              transition={{ repeat: Infinity, duration: 1.8, ease: 'easeInOut' }}
+            />
+          </span>
+        </div>
+      </motion.div>
     </section>
   );
 };

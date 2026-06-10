@@ -1,31 +1,28 @@
-import { motion } from 'framer-motion';
-import { fadeInUp } from '@/styles/motionVariants';
+import type { ReactNode } from 'react';
+import Reveal from './Reveal';
 
 interface SectionHeadingProps {
   eyebrow?: string;
-  title: string;
+  title: ReactNode;
   description?: string;
   align?: 'left' | 'center';
 }
 
 const SectionHeading = ({ eyebrow, title, description, align = 'left' }: SectionHeadingProps) => (
-  <motion.div
-    className={`space-y-4 ${align === 'center' ? 'mx-auto max-w-3xl text-center' : 'max-w-3xl'}`}
-    variants={fadeInUp}
-    initial="hidden"
-    whileInView="visible"
-    viewport={{ once: true, amount: 0.4 }}
-  >
+  <Reveal className={align === 'center' ? 'mx-auto max-w-3xl text-center' : 'max-w-3xl'}>
     {eyebrow ? (
-      <p className="text-sm font-semibold uppercase tracking-[0.16em] text-brand-green">{eyebrow}</p>
+      <p className="eyebrow">
+        <span className="h-1.5 w-1.5 rounded-full bg-gradient-brand" />
+        {eyebrow}
+      </p>
     ) : null}
-    <h2 className="display-2 text-balance">{title}</h2>
+    <h2 className="display-2 mt-5 text-balance">{title}</h2>
     {description ? (
-      <p className={`text-lg leading-relaxed text-ink2 ${align === 'center' ? 'mx-auto' : ''}`}>
+      <p className={`mt-5 text-lg leading-relaxed text-ink2 ${align === 'center' ? 'mx-auto' : ''}`}>
         {description}
       </p>
     ) : null}
-  </motion.div>
+  </Reveal>
 );
 
 export default SectionHeading;

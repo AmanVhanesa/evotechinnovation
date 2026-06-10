@@ -24,15 +24,15 @@ export const projects: Project[] = [
     ],
     liveUrl: 'https://learnovoportal.com',
     liveLabel: 'learnovoportal.com',
-    image: '/projects/learnovo-hero.png',
+    image: '/projects/learnovo-dashboard.png',
     gallery: [
-      { src: '/projects/learnovo-dashboard.png', alt: 'Learnovo admin dashboard with today’s collection, attendance, fee-collection overview and quick shortcuts' },
+      { src: '/projects/learnovo-hero.png', alt: 'Learnovo marketing homepage — manage your school the smart way' },
+      { src: '/projects/learnovo-devices.png', alt: 'Learnovo running across laptop, phone and tablet — one platform, every device' },
       { src: '/projects/learnovo-features.png', alt: 'Learnovo feature grid — attendance, fee collection, gradebook, report cards, timetable and parent portal' },
       { src: '/projects/learnovo-security.png', alt: 'Learnovo security overview — 256-bit encryption, role-based access, daily backups and GDPR compliance' },
-      { src: '/projects/learnovo-devices.png', alt: 'Learnovo running across laptop, phone and tablet — one platform, every device' },
       { src: '/projects/learnovo-admin.png', alt: 'Learnovo powerful admin dashboard shown on a laptop' },
     ],
-    cover: { from: '#134e7c', to: '#17a06a' },
+    cover: { from: '#17a06a', to: '#0e7ea3' },
     featured: true,
   },
   {
@@ -60,7 +60,7 @@ export const projects: Project[] = [
     liveLabel: 'spinternationalschool.com',
     liveEmbed: true,
     appComingSoon: true,
-    cover: { from: '#0f3b63', to: '#2f8f9d' },
+    cover: { from: '#0e7ea3', to: '#134e7c' },
     featured: true,
   },
   {
@@ -87,7 +87,7 @@ export const projects: Project[] = [
     liveUrl: 'https://newmedixpharma.com',
     liveLabel: 'newmedixpharma.com',
     image: '/projects/newmedix-pharma.jpg',
-    cover: { from: '#0e5a73', to: '#17a06a' },
+    cover: { from: '#17a06a', to: '#0e7ea3' },
     featured: true,
   },
   {
@@ -114,7 +114,7 @@ export const projects: Project[] = [
     liveUrl: 'https://syphonagribiotech.com',
     liveLabel: 'syphonagribiotech.com',
     liveEmbed: true,
-    cover: { from: '#15803d', to: '#1aa06a' },
+    cover: { from: '#2fbf86', to: '#17a06a' },
     featured: true,
   },
   {
@@ -139,7 +139,7 @@ export const projects: Project[] = [
       'Lightweight and fast on any Android device',
     ],
     appComingSoon: true,
-    cover: { from: '#134e7c', to: '#1f9c6a' },
+    cover: { from: '#0e7ea3', to: '#17a06a' },
     featured: false,
   },
   {
@@ -164,7 +164,7 @@ export const projects: Project[] = [
       'Scales from single trips to repeat bookings',
     ],
     appComingSoon: true,
-    cover: { from: '#243b55', to: '#1f8aa8' },
+    cover: { from: '#134e7c', to: '#0e7ea3' },
     featured: false,
   },
 ];

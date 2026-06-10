@@ -12,7 +12,7 @@ const formFields = [
 type FormState = Record<string, string>;
 
 const inputClasses =
-  'mt-2 w-full rounded-xl border border-line bg-white px-4 py-3 text-ink outline-none transition focus:border-brand-blue/50 focus:shadow-[0_0_0_4px_rgba(19,78,124,0.12)]';
+  'mt-2 w-full rounded-xl border border-line bg-white px-4 py-3 text-ink placeholder:text-ink3 outline-none backdrop-blur-md transition focus:border-brand-cyan/50 focus:shadow-[0_0_0_4px_rgba(19,78,124,0.12)]';
 
 const ContactForm = () => {
   const [formState, setFormState] = useState<FormState>({ name: '', email: '', budget: '', message: '' });
@@ -73,13 +73,14 @@ const ContactForm = () => {
       name="contact"
       method="POST"
       data-netlify="true"
-      className="rounded-3xl border border-line bg-white p-6 shadow-card sm:p-8"
+      className="glass-card relative overflow-hidden rounded-3xl p-6 sm:p-8"
       variants={fadeInUp}
       initial="hidden"
       whileInView="visible"
       viewport={{ once: true, amount: 0.2 }}
       onSubmit={handleSubmit}
     >
+      <div aria-hidden="true" className="absolute inset-x-0 top-0 h-px bg-gradient-brand opacity-60" />
       <input type="hidden" name="form-name" value="contact" />
       <div className="space-y-5">
         {formFields.map((field) => (
@@ -89,11 +90,11 @@ const ContactForm = () => {
               {...field}
               value={formState[field.name]}
               onChange={(event) => setFormState((prev) => ({ ...prev, [field.name]: event.target.value }))}
-              className={`${inputClasses} ${errors[field.name] ? 'border-rose-400' : ''}`}
+              className={`${inputClasses} ${errors[field.name] ? 'border-rose-400/70' : ''}`}
               aria-invalid={Boolean(errors[field.name])}
             />
             {errors[field.name] ? (
-              <span className="mt-1 block text-xs font-normal text-rose-500">{errors[field.name]}</span>
+              <span className="mt-1 block text-xs font-normal text-rose-400">{errors[field.name]}</span>
             ) : null}
           </label>
         ))}
@@ -105,23 +106,23 @@ const ContactForm = () => {
             placeholder="Goals, platforms, timelines — anything helpful."
             value={formState.message}
             onChange={(event) => setFormState((prev) => ({ ...prev, message: event.target.value }))}
-            className={`${inputClasses} resize-none ${errors.message ? 'border-rose-400' : ''}`}
+            className={`${inputClasses} resize-none ${errors.message ? 'border-rose-400/70' : ''}`}
             aria-invalid={Boolean(errors.message)}
           />
           {errors.message ? (
-            <span className="mt-1 block text-xs font-normal text-rose-500">{errors.message}</span>
+            <span className="mt-1 block text-xs font-normal text-rose-400">{errors.message}</span>
           ) : null}
         </label>
         <button
           type="submit"
-          className="w-full rounded-pill bg-brand-blue px-6 py-3.5 font-semibold text-white transition hover:bg-brand-bluedeep disabled:opacity-60"
+          className="w-full rounded-pill bg-gradient-brand px-6 py-3.5 font-semibold text-white transition duration-300 hover:shadow-glow disabled:opacity-60"
           disabled={status === 'loading'}
         >
           {status === 'loading' ? 'Sending…' : 'Send message'}
         </button>
         {status === 'success' ? (
           <motion.p
-            className="text-sm font-semibold text-brand-green"
+            className="text-sm font-semibold text-brand-teal"
             initial={{ opacity: 0, y: 6 }}
             animate={{ opacity: 1, y: 0 }}
           >
@@ -129,7 +130,7 @@ const ContactForm = () => {
           </motion.p>
         ) : null}
         {status === 'error' ? (
-          <p className="text-sm text-rose-500">Something went wrong. Please try again or email us directly.</p>
+          <p className="text-sm text-rose-400">Something went wrong. Please try again or email us directly.</p>
         ) : null}
       </div>
     </motion.form>

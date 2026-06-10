@@ -1,16 +1,22 @@
 import { motion } from 'framer-motion';
 import { useMemo } from 'react';
 import { Link, useParams } from 'react-router-dom';
+import Aurora from '@/components/Aurora';
+import BrowserFrame from '@/components/BrowserFrame';
 import CTAButton from '@/components/CTAButton';
+import Magnetic from '@/components/Magnetic';
 import ProjectCover from '@/components/ProjectCover';
+import Reveal from '@/components/Reveal';
 import { getProjectBySlug, projects } from '@/data/projects';
 import usePageMeta from '@/hooks/usePageMeta';
 import { fadeInUp, pageTransition, scaleReveal } from '@/styles/motionVariants';
 
 const Check = () => (
-  <svg width="20" height="20" viewBox="0 0 24 24" fill="none" aria-hidden="true" className="mt-0.5 shrink-0 text-brand-green">
-    <path d="M4 12.5l5 5 11-11" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
-  </svg>
+  <span className="mt-0.5 flex h-5 w-5 shrink-0 items-center justify-center rounded-full bg-gradient-brand">
+    <svg width="11" height="11" viewBox="0 0 24 24" fill="none" aria-hidden="true" className="text-white">
+      <path d="M5 12.5l4.5 4.5L19 7.5" stroke="currentColor" strokeWidth="3" strokeLinecap="round" strokeLinejoin="round" />
+    </svg>
+  </span>
 );
 
 const ProjectDetail = () => {
@@ -42,125 +48,165 @@ const ProjectDetail = () => {
 
   return (
     <motion.div variants={pageTransition} initial="hidden" animate="visible" exit="exit">
-      <section className="container-x pb-10 pt-16 sm:pt-20">
-        <Link to="/work" className="text-sm font-medium text-ink2 transition hover:text-ink">
-          ← All work
-        </Link>
-        <motion.div variants={fadeInUp} initial="hidden" animate="visible" className="mt-6 max-w-3xl">
-          <p className="text-sm font-semibold uppercase tracking-[0.16em] text-brand-green">
-            {project.categoryLabel}
-          </p>
-          <h1 className="display-1 mt-3 text-balance">{project.title}</h1>
-          <p className="mt-5 text-xl leading-relaxed text-ink2">{project.tagline}</p>
-          <div className="mt-7 flex flex-wrap items-center gap-3">
-            {project.liveUrl ? (
-              <CTAButton href={project.liveUrl} external>
-                Visit live site →
-              </CTAButton>
-            ) : null}
-            {project.playStoreUrl ? (
-              <CTAButton href={project.playStoreUrl} external variant="secondary">
-                Get it on Play Store
-              </CTAButton>
-            ) : project.appComingSoon ? (
-              <span className="inline-flex items-center gap-2 rounded-pill border border-line bg-soft px-5 py-3 text-[0.95rem] font-semibold text-ink2">
-                <span className="h-2 w-2 rounded-full bg-brand-green" />
-                Android app · Coming soon
-              </span>
-            ) : null}
-          </div>
-        </motion.div>
+      <section className="relative overflow-hidden pb-10 pt-[136px] sm:pt-[150px]">
+        <Aurora />
+        <div className="container-x relative">
+          <Link
+            to="/work"
+            className="group inline-flex items-center gap-2 text-sm font-medium text-ink2 transition hover:text-ink"
+          >
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" aria-hidden="true" className="transition-transform duration-300 group-hover:-translate-x-0.5">
+              <path d="M19 12H5m6 6-6-6 6-6" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
+            </svg>
+            All work
+          </Link>
+          <motion.div variants={fadeInUp} initial="hidden" animate="visible" className="mt-8 max-w-3xl">
+            <p className="eyebrow">
+              <span className="h-1.5 w-1.5 rounded-full bg-gradient-brand" />
+              {project.categoryLabel}
+            </p>
+            <h1 className="display-1 mt-5 text-balance">{project.title}</h1>
+            <p className="mt-5 text-xl leading-relaxed text-ink2">{project.tagline}</p>
+            <div className="mt-8 flex flex-wrap items-center gap-3">
+              {project.liveUrl ? (
+                <Magnetic>
+                  <CTAButton href={project.liveUrl} external>
+                    Visit live site
+                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" aria-hidden="true">
+                      <path d="M7 17 17 7M9 7h8v8" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round" />
+                    </svg>
+                  </CTAButton>
+                </Magnetic>
+              ) : null}
+              {project.playStoreUrl ? (
+                <CTAButton href={project.playStoreUrl} external variant="secondary">
+                  Get it on Play Store
+                </CTAButton>
+              ) : project.appComingSoon ? (
+                <span className="pill !px-5 !py-3 text-[0.95rem] font-semibold">
+                  <span className="h-2 w-2 animate-pulse-dot rounded-full bg-brand-teal" />
+                  Android app · Coming soon
+                </span>
+              ) : null}
+            </div>
+          </motion.div>
+        </div>
       </section>
 
-      <section className="container-x">
+      {/* Hero visual */}
+      <section className="container-x relative">
         <motion.div
           variants={scaleReveal}
           initial="hidden"
           whileInView="visible"
           viewport={{ once: true, amount: 0.2 }}
-          className="aspect-[16/10] overflow-hidden rounded-3xl border border-line shadow-lift sm:aspect-[16/8]"
+          className="relative"
         >
-          <ProjectCover project={project} />
+          <div
+            aria-hidden="true"
+            className="absolute -inset-8 -z-10 rounded-[3rem] opacity-25 blur-3xl"
+            style={{ background: `linear-gradient(135deg, ${project.cover.from}, ${project.cover.to})` }}
+          />
+          {project.category === 'app' && !project.image && !project.liveEmbed ? (
+            <div className="relative aspect-[16/10] overflow-hidden rounded-2xl border border-linestrong shadow-lift sm:aspect-[16/8.5]">
+              <ProjectCover project={project} className="absolute inset-0" />
+            </div>
+          ) : (
+            <BrowserFrame url={project.liveLabel} bodyClassName="aspect-[16/10] sm:aspect-[16/8.5]">
+              <ProjectCover project={project} className="absolute inset-0" />
+            </BrowserFrame>
+          )}
         </motion.div>
       </section>
 
       <section className="container-x py-20">
         <div className="grid gap-12 lg:grid-cols-[1.6fr,1fr]">
           <div>
-            <h2 className="font-display text-2xl font-semibold tracking-tighter text-ink">Overview</h2>
-            <p className="mt-4 text-lg leading-relaxed text-ink2">{project.overview}</p>
+            <Reveal>
+              <h2 className="font-display text-2xl font-semibold tracking-tighter text-ink">Overview</h2>
+              <p className="mt-4 text-lg leading-relaxed text-ink2">{project.overview}</p>
+            </Reveal>
 
-            <h2 className="mt-12 font-display text-2xl font-semibold tracking-tighter text-ink">
-              Highlights
-            </h2>
-            <ul className="mt-5 space-y-3.5">
-              {project.features.map((feature) => (
-                <li key={feature} className="flex gap-3 text-[1.02rem] leading-relaxed text-ink">
-                  <Check />
-                  <span>{feature}</span>
-                </li>
-              ))}
-            </ul>
+            <Reveal className="mt-12">
+              <h2 className="font-display text-2xl font-semibold tracking-tighter text-ink">
+                Highlights
+              </h2>
+              <ul className="mt-6 space-y-4">
+                {project.features.map((feature) => (
+                  <li key={feature} className="flex gap-3.5 text-[1.02rem] leading-relaxed text-ink">
+                    <Check />
+                    <span>{feature}</span>
+                  </li>
+                ))}
+              </ul>
+            </Reveal>
           </div>
 
-          <aside className="h-fit rounded-3xl border border-line bg-soft p-7">
-            <dl className="space-y-6">
-              <div>
-                <dt className="text-xs font-semibold uppercase tracking-[0.16em] text-ink3">Sector</dt>
-                <dd className="mt-1.5 font-medium text-ink">{project.sector}</dd>
-              </div>
-              <div>
-                <dt className="text-xs font-semibold uppercase tracking-[0.16em] text-ink3">Year</dt>
-                <dd className="mt-1.5 font-medium text-ink">{project.year}</dd>
-              </div>
-              <div>
-                <dt className="text-xs font-semibold uppercase tracking-[0.16em] text-ink3">
-                  What we delivered
-                </dt>
-                <dd className="mt-2 flex flex-wrap gap-2">
-                  {project.services.map((service) => (
-                    <span key={service} className="rounded-pill bg-white px-3 py-1.5 text-sm text-ink2">
-                      {service}
-                    </span>
-                  ))}
-                </dd>
-              </div>
-              <div>
-                <dt className="text-xs font-semibold uppercase tracking-[0.16em] text-ink3">
-                  Built with
-                </dt>
-                <dd className="mt-2 flex flex-wrap gap-2">
-                  {project.tech.map((tech) => (
-                    <span key={tech} className="rounded-pill bg-white px-3 py-1.5 text-sm text-ink2">
-                      {tech}
-                    </span>
-                  ))}
-                </dd>
-              </div>
-            </dl>
-          </aside>
+          <Reveal delay={0.1} className="h-fit">
+            <aside className="glass-card rounded-3xl p-7">
+              <dl className="space-y-7">
+                <div>
+                  <dt className="text-xs font-semibold uppercase tracking-[0.18em] text-ink3">Sector</dt>
+                  <dd className="mt-2 font-medium text-ink">{project.sector}</dd>
+                </div>
+                <div>
+                  <dt className="text-xs font-semibold uppercase tracking-[0.18em] text-ink3">Year</dt>
+                  <dd className="mt-2 font-medium text-ink">{project.year}</dd>
+                </div>
+                <div>
+                  <dt className="text-xs font-semibold uppercase tracking-[0.18em] text-ink3">
+                    What we delivered
+                  </dt>
+                  <dd className="mt-3 flex flex-wrap gap-2">
+                    {project.services.map((service) => (
+                      <span key={service} className="pill">
+                        {service}
+                      </span>
+                    ))}
+                  </dd>
+                </div>
+                <div>
+                  <dt className="text-xs font-semibold uppercase tracking-[0.18em] text-ink3">
+                    Built with
+                  </dt>
+                  <dd className="mt-3 flex flex-wrap gap-2">
+                    {project.tech.map((tech) => (
+                      <span key={tech} className="pill">
+                        <span className="h-1.5 w-1.5 rounded-full bg-gradient-brand" />
+                        {tech}
+                      </span>
+                    ))}
+                  </dd>
+                </div>
+              </dl>
+            </aside>
+          </Reveal>
         </div>
       </section>
 
       {project.gallery?.length ? (
         <section className="container-x pb-20">
-          <h2 className="font-display text-2xl font-semibold tracking-tighter text-ink">Gallery</h2>
-          <div className="mt-6 grid gap-6 sm:grid-cols-2">
-            {project.gallery.map((shot) => (
+          <Reveal>
+            <h2 className="font-display text-2xl font-semibold tracking-tighter text-ink">Gallery</h2>
+          </Reveal>
+          <div className="mt-8 grid gap-6 sm:grid-cols-2">
+            {project.gallery.map((shot, index) => (
               <motion.figure
                 key={shot.src}
                 variants={scaleReveal}
                 initial="hidden"
                 whileInView="visible"
                 viewport={{ once: true, amount: 0.2 }}
-                className="overflow-hidden rounded-2xl border border-line shadow-card"
+                className={`group overflow-hidden rounded-2xl border border-line bg-[#eef2f7] shadow-card ${
+                  index === 0 ? 'sm:col-span-2' : ''
+                }`}
               >
                 <img
                   src={shot.src}
                   alt={shot.alt}
                   loading="lazy"
                   decoding="async"
-                  className="h-full w-full object-cover"
+                  className="h-full w-full object-contain transition-transform duration-700 ease-apple group-hover:scale-[1.02]"
                 />
               </motion.figure>
             ))}
@@ -169,27 +215,35 @@ const ProjectDetail = () => {
       ) : null}
 
       {/* Next + CTA */}
-      <section className="bg-soft py-20">
-        <div className="container-x flex flex-col items-center gap-10 text-center">
-          <div>
-            <p className="text-sm font-semibold uppercase tracking-[0.16em] text-brand-green">Up next</p>
+      <section className="relative overflow-hidden border-t border-line bg-soft py-20">
+        <Aurora />
+        <div className="container-x relative flex flex-col items-center gap-12 text-center">
+          <Reveal>
+            <p className="text-xs font-semibold uppercase tracking-[0.22em] text-ink3">Up next</p>
             <Link
               to={`/work/${next.slug}`}
-              className="mt-3 inline-block font-display text-3xl font-semibold tracking-tighter text-ink transition hover:text-brand-blue"
+              className="group mt-4 inline-flex items-center gap-3 font-display text-3xl font-semibold tracking-tighter text-ink transition hover:text-brand-cyan sm:text-4xl"
             >
-              {next.title} →
+              {next.title}
+              <svg width="26" height="26" viewBox="0 0 24 24" fill="none" aria-hidden="true" className="transition-transform duration-300 group-hover:translate-x-1.5">
+                <path d="M5 12h14m-6-6 6 6-6 6" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
+              </svg>
             </Link>
-          </div>
-          <div className="h-px w-24 bg-line" />
-          <div>
-            <h2 className="display-2 max-w-xl">Want something like this?</h2>
-            <div className="mt-7 flex flex-wrap justify-center gap-3">
-              <CTAButton to="/contact">Start a project</CTAButton>
+          </Reveal>
+          <div className="h-px w-24 bg-gradient-brand opacity-50" />
+          <Reveal delay={0.1}>
+            <h2 className="display-2 max-w-xl text-balance">
+              Want something <span className="gradient-text">like this?</span>
+            </h2>
+            <div className="mt-8 flex flex-wrap justify-center gap-3">
+              <Magnetic>
+                <CTAButton to="/contact">Start a project</CTAButton>
+              </Magnetic>
               <CTAButton to="/work" variant="secondary">
                 See more work
               </CTAButton>
             </div>
-          </div>
+          </Reveal>
         </div>
       </section>
     </motion.div>

@@ -1,3 +1,4 @@
+import { motion } from 'framer-motion';
 import { useSearchParams } from 'react-router-dom';
 import type { ProjectCategory } from '@/types/project';
 
@@ -22,20 +23,27 @@ const FilterChips = () => {
   };
 
   return (
-    <div className="inline-flex flex-wrap gap-1.5 rounded-pill border border-line bg-soft p-1.5">
+    <div className="glass inline-flex flex-wrap gap-1 rounded-pill p-1.5">
       {filters.map((filter) => {
         const isActive = activeFilter === filter.value;
         return (
           <button
             key={filter.value}
             type="button"
-            className={`rounded-pill px-4 py-2 text-sm font-semibold transition duration-300 ease-apple ${
-              isActive ? 'bg-white text-ink shadow-soft' : 'text-ink2 hover:text-ink'
-            }`}
+            className="relative rounded-pill px-4 py-2 text-sm font-semibold"
             aria-pressed={isActive}
             onClick={() => updateFilter(filter.value)}
           >
-            {filter.label}
+            {isActive && (
+              <motion.span
+                layoutId="filter-pill"
+                className="absolute inset-0 rounded-pill bg-gradient-brand"
+                transition={{ type: 'spring', stiffness: 380, damping: 34 }}
+              />
+            )}
+            <span className={`relative transition-colors ${isActive ? 'text-white' : 'text-ink2 hover:text-ink'}`}>
+              {filter.label}
+            </span>
           </button>
         );
       })}

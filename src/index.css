@@ -1,4 +1,4 @@
-@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Inter+Tight:wght@500;600;700&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Space+Grotesk:wght@400;500;600;700&display=swap');
 @import './styles/vars.css';
 
 @tailwind base;
@@ -22,6 +22,7 @@ body {
   color: var(--ink);
   background: var(--bg);
   min-height: 100vh;
+  overflow-x: hidden;
   text-rendering: optimizeLegibility;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
@@ -32,7 +33,22 @@ body {
 }
 
 ::selection {
-  background: rgba(19, 78, 124, 0.16);
+  background: rgba(19, 78, 124, 0.18);
+}
+
+::-webkit-scrollbar {
+  width: 10px;
+}
+::-webkit-scrollbar-track {
+  background: var(--bg);
+}
+::-webkit-scrollbar-thumb {
+  background: rgba(13, 30, 50, 0.18);
+  border-radius: 99px;
+  border: 2px solid var(--bg);
+}
+::-webkit-scrollbar-thumb:hover {
+  background: rgba(13, 30, 50, 0.3);
 }
 
 :focus-visible {
@@ -47,7 +63,7 @@ body {
   h3,
   h4 {
     font-family: var(--font-display);
-    letter-spacing: -0.022em;
+    letter-spacing: -0.025em;
     font-weight: 600;
     color: var(--ink);
   }
@@ -58,21 +74,20 @@ body {
     @apply mx-auto w-full max-w-content px-5 sm:px-6 lg:px-10;
   }
 
-  /* Apple-style hero / section display type */
   .display-1 {
     font-family: var(--font-display);
     font-weight: 600;
-    letter-spacing: -0.03em;
-    line-height: 1.04;
-    font-size: clamp(2.6rem, 6.5vw, 5rem);
+    letter-spacing: -0.035em;
+    line-height: 1.02;
+    font-size: clamp(2.8rem, 7vw, 5.6rem);
   }
 
   .display-2 {
     font-family: var(--font-display);
     font-weight: 600;
-    letter-spacing: -0.028em;
+    letter-spacing: -0.03em;
     line-height: 1.06;
-    font-size: clamp(2rem, 4.6vw, 3.4rem);
+    font-size: clamp(2rem, 4.6vw, 3.5rem);
   }
 
   .text-balance {
@@ -86,15 +101,39 @@ body {
     color: transparent;
   }
 
-  .card-surface {
-    background: var(--bg);
+  /* Liquid-glass surface */
+  .glass {
+    background: var(--glass);
     border: 1px solid var(--line);
-    border-radius: var(--radius-3xl);
-    box-shadow: var(--shadow-card);
+    backdrop-filter: blur(20px);
+    -webkit-backdrop-filter: blur(20px);
+  }
+
+  .glass-strong {
+    background: var(--glass-strong);
+    border: 1px solid var(--line-strong);
+    backdrop-filter: blur(24px);
+    -webkit-backdrop-filter: blur(24px);
+  }
+
+  /* Glass card with a soft inner top highlight */
+  .glass-card {
+    position: relative;
+    background: linear-gradient(180deg, rgba(255, 255, 255, 0.9), rgba(255, 255, 255, 0.65));
+    border: 1px solid var(--line);
+    backdrop-filter: blur(20px);
+    -webkit-backdrop-filter: blur(20px);
+    box-shadow:
+      inset 0 1px 0 rgba(255, 255, 255, 0.9),
+      var(--shadow-card);
+  }
+
+  .eyebrow {
+    @apply inline-flex items-center gap-2 rounded-pill border border-line bg-white/70 px-3.5 py-1.5 text-[0.72rem] font-semibold uppercase tracking-[0.18em] text-ink2 backdrop-blur-md;
   }
 
   .pill {
-    @apply inline-flex items-center gap-2 rounded-pill border border-line bg-white px-3.5 py-1.5 text-[0.8rem] font-medium text-ink2;
+    @apply inline-flex items-center gap-2 rounded-pill border border-line bg-white/70 px-3.5 py-1.5 text-[0.8rem] font-medium text-ink2 backdrop-blur-md;
   }
 
   .skip-link {
@@ -103,7 +142,7 @@ body {
     left: 1rem;
     padding: 0.7rem 1.25rem;
     background: var(--ink);
-    color: white;
+    color: #fff;
     border-radius: var(--radius-pill);
     font-weight: 600;
     transition: top 0.2s ease;
@@ -115,10 +154,36 @@ body {
   }
 }
 
+/* Film-grain noise overlay (inline SVG turbulence) */
+.noise::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  opacity: 0.025;
+  background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+}
+
+/* Edge fade for marquees */
+.mask-fade-x {
+  mask-image: linear-gradient(90deg, transparent, black 12%, black 88%, transparent);
+  -webkit-mask-image: linear-gradient(90deg, transparent, black 12%, black 88%, transparent);
+}
+
 .hide-scrollbar::-webkit-scrollbar {
   display: none;
 }
 .hide-scrollbar {
   -ms-overflow-style: none;
   scrollbar-width: none;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
 }

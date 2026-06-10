@@ -2,29 +2,26 @@
   color-scheme: light;
 
   /* Brand — sampled from the EvoTech Innovations logo */
-  --brand-blue: #134e7c;
-  --brand-blue-deep: #0e3c61;
-  --brand-green: #17a06a;
-  --brand-green-deep: #0f7e52;
+  --blue: #134e7c;
+  --blue-deep: #0e3c61;
+  --teal: #17a06a; /* brand green */
+  --cyan: #0e7ea3; /* blue→green midpoint accent */
+  --teal-soft: #2fbf86;
+  --violet: #134e7c; /* deep blue stands in for the old violet accent */
 
-  /* Apple-style neutral canvas */
+  /* Clean light canvas */
   --bg: #ffffff;
-  --bg-soft: #f5f5f7;
-  --bg-tint: #f4f8fb;
-  --ink: #1d1d1f;
-  --ink-2: #5b5d62;
-  --ink-3: #86868b;
-  --line: rgba(0, 0, 0, 0.08);
-  --line-strong: rgba(0, 0, 0, 0.14);
+  --bg-soft: #f5f7fa;
+  --bg-raised: #eef4f8;
+  --ink: #16181d;
+  --ink-2: #565d68;
+  --ink-3: #8b929e;
+  --line: rgba(13, 30, 50, 0.09);
+  --line-strong: rgba(13, 30, 50, 0.16);
 
-  /* Backwards-compatible aliases */
-  --color-primary: var(--brand-blue);
-  --color-accent: var(--brand-green);
-  --color-dark: var(--ink);
-  --color-muted: var(--bg-soft);
-  --color-surface: var(--bg);
-  --color-text: var(--ink);
-  --color-text-muted: var(--ink-2);
+  /* Glass surfaces */
+  --glass: rgba(255, 255, 255, 0.6);
+  --glass-strong: rgba(255, 255, 255, 0.78);
 
   --radius-sm: 0.5rem;
   --radius-md: 0.875rem;
@@ -34,18 +31,24 @@
   --radius-3xl: 2.5rem;
   --radius-pill: 999px;
 
-  --shadow-soft: 0 2px 10px rgba(0, 0, 0, 0.04);
-  --shadow-card: 0 10px 40px -12px rgba(16, 24, 40, 0.16);
-  --shadow-lift: 0 24px 60px -20px rgba(16, 24, 40, 0.28);
-  --shadow-focus: 0 0 0 4px rgba(19, 78, 124, 0.28);
+  --shadow-soft: 0 2px 10px rgba(16, 24, 40, 0.05);
+  --shadow-card: 0 14px 44px -14px rgba(16, 24, 40, 0.14);
+  --shadow-lift: 0 28px 70px -22px rgba(16, 24, 40, 0.24);
+  --shadow-focus: 0 0 0 3px rgba(19, 78, 124, 0.3);
+  --shadow-glow: 0 10px 40px -8px rgba(14, 126, 163, 0.45);
 
-  --gradient-brand: linear-gradient(120deg, var(--brand-blue) 0%, var(--brand-green) 100%);
+  --gradient-brand: linear-gradient(110deg, var(--blue) 0%, var(--cyan) 48%, var(--teal) 100%);
+  --gradient-brand-soft: linear-gradient(
+    110deg,
+    rgba(19, 78, 124, 0.1),
+    rgba(14, 126, 163, 0.1) 48%,
+    rgba(23, 160, 106, 0.1)
+  );
 
-  --font-display: -apple-system, BlinkMacSystemFont, 'SF Pro Display', 'Inter Tight', 'Inter',
-    system-ui, sans-serif;
-  --font-body: -apple-system, BlinkMacSystemFont, 'SF Pro Text', 'Inter', system-ui, sans-serif;
+  --font-display: 'Space Grotesk', 'Inter', system-ui, sans-serif;
+  --font-body: 'Inter', system-ui, -apple-system, sans-serif;
 
-  --header-h: 52px;
+  --header-h: 76px;
 }
 
 @media (prefers-reduced-motion: no-preference) {
